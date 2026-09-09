@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>NOVARA — Wear Your Story</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+
+<body>
+    <header class="header"><button class="logo" onclick="go('home')">NOVARA</button>
+        <nav class="nav"><button data-nav="home" onclick="go('home')">Home</button><button data-nav="shop"
+                onclick="go('shop')">Shop</button><button data-nav="collections"
+                onclick="go('collections')">Collections</button><button data-nav="about"
+                onclick="go('about')">About</button></nav>
+        <div class="actions"><button onclick="openSearch()"><i data-lucide="search"></i></button>
+             <button class="account" onclick="openLogin()"><i data-lucide="user"></i></button>
+            <button class="wish" onclick="openWishlist()"><i data-lucide="heart"></i><span id="wishCount" class="count" style="display:none">0</span></button>
+            <button class="bag"onclick="openCart()"><i data-lucide="shopping-bag"></i><span id="count" class="count" style="display:none">0</span></button>
+            <button class="menu" onclick="toggleMenu()"><i data-lucide="menu"></i></button>
+
+        </div>
+    </header>
+    <div id="menuBg" class="menu-bg" onclick="toggleMenu()"></div>
+<nav id="mobileNav" class="mobile-nav">
+    <button data-nav="home" onclick="go('home');toggleMenu()">Home</button>
+    <button data-nav="shop" onclick="go('shop');toggleMenu()">Shop</button>
+    <button data-nav="collections" onclick="go('collections');toggleMenu()">Collections</button>
+    <button data-nav="about" onclick="go('about');toggleMenu()">About</button>
+</nav>
+
+<div id="searchBg" class="search-bg" onclick="closeSearch()"></div>
+<div id="searchPanel" class="search-panel">
+    <div class="search-head">
+        <span class="search-icon"><i data-lucide="search"></i></span>
+        <input id="searchInput" type="text" placeholder="Search products..." oninput="doSearch(this.value)">
+        <button onclick="closeSearch()"><i data-lucide="x"></i></button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+</div>
+<div id="wishBg" class="cart-bg" onclick="closeWishlist()"></div>
+<aside id="wishlist" class="cart">
+    <div class="cart-head">
+        <h2>Wishlist (<span id="wishNum">0</span>)</h2><button onclick="closeWishlist()"><i data-lucide="x"></i></button>
+    </div>
+    <div id="wishItems" class="cart-items"></div>
+</aside>
+    <main>
+        <section id="home" class="page show">
+            <section class="hero">
+                <video class="hero-bg" autoplay muted loop playsinline poster="assets/hero-poster.jpg">
+                    <source src="assets/hero-loop.mp4" type="video/mp4">
+                </video>
+                <div class="shade"></div>
+                <div class="hero-copy">
+                    <p class="eyebrow">NEW SEASON / 2026</p>
+                    <h1>WEAR<br>YOUR<br>STORY</h1>
+                    <p>Modern silhouettes. Timeless pieces.<br>Designed for the ones who move different.</p><button
+                        class="btn" onclick="go('shop')">Shop now <span>↗</span></button>
+                </div>
+                <div class="hero-bottom"><span>01 — 04</span><span>SCROLL ↓</span></div>
+            </section>
+            <section class="intro">
+                <p class="eyebrow">THE NOVARA CODE</p>
+                <h2>Different by design.</h2>
+                <p>We create considered pieces for modern individuals who express themselves boldly, move with intention
+                    and aren't afraid to be different.</p>
+            </section>
+            <section class="section">
+                <div class="head">
+                    <div>
+                        <p class="eyebrow">FEATURED</p>
+                        <h2>New arrivals</h2>
+                    </div><button onclick="go('shop')">View all ↗</button>
+                </div>
+                <div id="featured" class="grid"></div>
+            </section>
+            <section class="feature">
+                <div class="feature-bg"></div>
+                <div class="feature-copy">
+                    <p class="eyebrow">01 / URBAN EDGE</p>
+                    <h2>Make an entrance.</h2><button class="btn" onclick="go('collections')">Explore collection
+                        ↗</button>
+                </div>
+            </section>
+            <div class="marquee">
+                <div>BE BOLD. &nbsp; BE YOU. &nbsp; BE NOVARA. &nbsp; / &nbsp; BE BOLD. &nbsp; BE YOU. &nbsp; BE NOVARA.
+                    &nbsp; /</div>
+            </div>
+            <section class="newsletter">
+                <p class="eyebrow">THE NOVARA EDIT</p>
+                <h2>Stay in the story.</h2>
+                <p>New drops, private edits and things worth knowing.</p>
+                <form onsubmit="event.preventDefault();handleNewsletterSubmit(this)">
+    <input required type="email" placeholder="Your email address">
+    <button>Join ↗</button>
+</form>
+            </section>
+            <div id="loginBg" class="cart-bg" onclick="closeLogin()"></div>
+<div id="loginModal" class="login-modal">
+    <button class="login-close" onclick="closeLogin()"><i data-lucide="x"></i></button>
+    <div class="login-tabs">
+        <button id="tabLogin" class="tab sel" onclick="switchAuthTab('login')">Log in</button>
+        <button id="tabSignup" class="tab" onclick="switchAuthTab('signup')">Sign up</button>
+    </div>
+    <p class="eyebrow" id="loginEyebrow">WELCOME BACK</p>
+    <h2 id="loginTitle">Log in to NOVARA</h2>
+    <form id="authForm" onsubmit="handleAuth(event)">
+        <label>Email</label>
+        <input required type="email" id="authEmail" placeholder="you@example.com">
+        <label>Password</label>
+        <input required type="password" id="authPassword" placeholder="••••••••" minlength="6">
+        <p id="authError" class="auth-error"></p>
+        <button type="submit" class="btn full" id="authSubmit">Log in <span>↗</span></button>
+    </form>
+</div>
+
+<div id="accountBg" class="cart-bg" onclick="closeAccount()"></div>
+<div id="accountPanel" class="login-modal account-panel">
+    <button class="login-close" onclick="closeAccount()"><i data-lucide="x"></i></button>
+    <p class="eyebrow">YOUR ACCOUNT</p>
+    <h2 id="accountEmail">you@example.com</h2>
+    <button class="btn full" onclick="logout()">Log out <span>↗</span></button>
+</div>
+        </section>
+        <section id="shop" class="page">
+            <div class="page-head">
+                <p class="eyebrow">THE COLLECTION</p>
+                <h1>Shop all.</h1>
+                <p>Timeless pieces. Modern attitude.</p>
+            </div>
+            <div class="filters"><button class="selected" onclick="filter('All',this)">All</button><button
+                    onclick="filter('Men',this)">Men</button><button
+                    onclick="filter('Women',this)">Women</button><button
+                    onclick="filter('Unisex',this)">Unisex</button><span></span><small id="shown"></small></div>
+            <div id="shopgrid" class="grid shop-grid"></div>
+        </section>
+        <section id="collections" class="page">
+            <div class="page-head">
+                <p class="eyebrow">CURATED EDITS</p>
+                <h1>Collections.</h1>
+                <p>Different sides of the same story.</p>
+            </div>
+            <div class="collection-grid">
+                <article class="collection"><img src="assets/nov5.png">
+                    <div class="c-copy"><span>01</span>
+                        <h2>The Essentials</h2>
+                        <p>Everyday staples, elevated.</p><button onclick="go('shop')">Shop collection ↗</button>
+                    </div>
+                </article>
+                <article class="collection"><img src="assets/nov1.png">
+                    <div class="c-copy"><span>02</span>
+                        <h2>Urban Edge</h2>
+                        <p>Bold. Confident. You.</p><button onclick="go('shop')">Shop collection ↗</button>
+                    </div>
+                </article>
+                <article class="collection"><img src="assets/nov3.png">
+                    <div class="c-copy"><span>03</span>
+                        <h2>Winter Breeze</h2>
+                        <p>Cozy layers. Cold days.</p><button onclick="go('shop')">Shop collection ↗</button>
+                    </div>
+                </article>
+                <article class="collection"><img src="assets/dress.png">
+                    <div class="c-copy"><span>04</span>
+                        <h2>Evening Noir</h2>
+                        <p>For nights that matter.</p><button onclick="go('shop')">Shop collection ↗</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+        <section id="about" class="page">
+            <section class="about">
+                <div>
+                    <p class="eyebrow">OUR STORY</p>
+                    <h1>More than<br>fashion.</h1>
+                    <p>NOVARA was born from a simple belief  that fashion is not just about what you wear, but how it
+                        makes you feel.</p>
+                </div>
+                <div class="about-img"><img src="assets/about.png" alt="About NOVARA">
+                </div>
+            </section>
+            <section class="about-copy">
+                <p>We create timeless pieces for the modern individual. Every silhouette is considered, every material
+                    selected with intention, and every collection built to live beyond a season.</p>
+                <div class="stats">
+                    <div><b>100%</b><span>Intentional design</span></div>
+                    <div><b>100%</b><span>Premium materials</span></div>
+                    <div><b>100%</b><span>Your story</span></div>
+                </div>
+            </section>
+        </section>
+        <section id="product" class="page">
+            <div class="product-page">
+                <div class="gallery"><img id="pimg1"><img id="pimg2"></div>
+                <div class="info">
+                    <p class="eyebrow">NOVARA / UNISEX</p>
+                    <h1 id="pname">Business Suit</h1><strong class="price" id="pprice">₦45,000</strong>
+                    <p class="desc">A refined NOVARA silhouette designed for movement and everyday expression. Made with
+                        premium fabric and finished with considered details.</p>
+                    <div class="option"><label>Colour</label>
+                        <div class="swatches"><i></i><i></i><i></i></div>
+                    </div>
+                    <div class="option"><label>Size</label>
+                        <div class="sizes" id="sizes"></div>
+                    </div><button class="btn full" onclick="addCurrent()">Add to bag <span><i data-lucide="shopping-bag"></i></span></button>
+                    <div class="accord">
+                        <div>Product details <span><i data-lucide="chevron-down"></i></span></div>
+                        <div>Shipping & returns <span><i data-lucide="chevron-down"></i></span></div>
+                        <div>Care instructions <span><i data-lucide="chevron-down"></i></span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="checkout" class="page">
+    <div class="checkout-page">
+        <div class="checkout-form">
+            <p class="eyebrow">CHECKOUT</p>
+            <h1>Complete your order.</h1>
+            <form id="checkoutForm" onsubmit="placeOrder(event)">
+                <label>Full name</label>
+                <input required type="text" id="ckName" placeholder="Jane Doe">
+                <label>Email</label>
+                <input required type="email" id="ckEmail" placeholder="you@example.com">
+                <label>Shipping address</label>
+                <input required type="text" id="ckAddress" placeholder="Street address">
+                <div class="row2">
+                    <div><label>City</label><input required type="text" id="ckCity" placeholder="City"></div>
+                    <div><label>Phone</label><input required type="tel" id="ckPhone" placeholder="+234..."></div>
+                </div>
+                <label>Card number</label>
+                <input required type="text" id="ckCard" placeholder="4242 4242 4242 4242" maxlength="19">
+                <div class="row2">
+                    <div><label>Expiry</label><input required type="text" id="ckExp" placeholder="MM/YY" maxlength="5"></div>
+                    <div><label>CVC</label><input required type="text" id="ckCvc" placeholder="123" maxlength="4"></div>
+                </div>
+                <button class="btn full" type="submit">Place order <span>↗</span></button>
+            </form>
+        </div>
+        <div class="checkout-summary">
+            <h2>Order summary</h2>
+            <div id="checkoutItems"></div>
+            <div class="ck-row"><span>Subtotal</span><strong id="ckSubtotal">₦0</strong></div>
+            <div class="ck-row"><span>Shipping</span><strong id="ckShipping">₦0</strong></div>
+            <div class="ck-row total"><span>Total</span><strong id="ckTotal">₦0</strong></div>
+        </div>
+    </div>
+</section>
+
+<section id="confirmation" class="page">
+    <div class="confirm-box">
+        <i data-lucide="check-circle-2"></i>
+        <p class="eyebrow">ORDER CONFIRMED</p>
+        <h1>Thank you<span id="confirmName"></span>.</h1>
+        <p>A confirmation has been sent to <strong id="confirmEmail"></strong>. Order <strong id="confirmId"></strong>.</p>
+        <button class="btn" onclick="go('home')">Continue shopping <span>↗</span></button>
+    </div>
+</section>
+    </main>
+    <footer><button class="logo" onclick="go('home')">NOVARA</button>
+        <div class="social"><span>Instagram</span><span>TikTok</span><span>X</span></div><span>© 2026 NOVARA. Wear your
+            story.</span>
+    </footer>
+    <div id="cartBg" class="cart-bg" onclick="closeCart()"></div>
+    <aside id="cart" class="cart">
+        <div class="cart-head">
+            <h2>Your bag (<span id="cartNum">0</span>)</h2><button onclick="closeCart()"><i data-lucide="x"></i></button>
+        </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="cart-foot">
+            <div><span>Subtotal</span><strong id="total">₦0</strong></div><small>Shipping calculated at
+                checkout.</small><button class="checkout" onclick="startCheckout()">Proceed to checkout ↗</button>
+        </div>
+    </aside>
+    <script src="script.js"></script>
+</body>
+
+</html>
